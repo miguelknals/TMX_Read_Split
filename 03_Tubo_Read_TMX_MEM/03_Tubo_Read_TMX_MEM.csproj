@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>_03_Tubo_Read_TMX_MEM</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="memtmx2.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="memtmx.kkkk" />
+  </ItemGroup>
+
+</Project>
