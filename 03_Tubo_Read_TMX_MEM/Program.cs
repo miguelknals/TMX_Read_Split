@@ -80,7 +80,7 @@ namespace _03_Tubo_Read_TMX_MEM
             // x_settings.NewLineHandling = NewLineHandling.Entitize;
             // x_settings.NewLineOnAttributes = true;
             XmlWriter x_write;
-
+            
             //  inpfileORI =  @"C:\u\usr\pro\VS2019\test\00_data\TEST.TMX";
             //inpfileORI = @"C:\u\usr\pro\VS2019\test\00_data\MFP20ABD030_SPA.TMX";            
             //inpfileORI = @"C:\u\usr\pro\VS2019\test\00_data\_ABD004.TMX";
@@ -99,27 +99,48 @@ namespace _03_Tubo_Read_TMX_MEM
             // me he quedado pues en el preproceso
             string line = "";
             bool insideCDATA = false;
-            using (var writer = new StreamWriter(inpfile))
-                {                        
-                using (var reader = new StreamReader(inpfileORI))
+
+            // we need to read the encoding of the TMX file (otherwise
+            // serailization will fail
+            System.Text.Encoding encoding = System.Text.Encoding.UTF8;
+            using (var reader = new StreamReader(inpfileORI))
+            {
+                while ((line = reader.ReadLine()) != null)
                 {
-                    while ((line = reader.ReadLine()) != null )
+                    string auxS = line.ToUpper();       
+                    if (auxS.Contains("UTF-16")){
+                        encoding = System.Text.Encoding.Unicode;                        
+                    }
+                    break;
+                }
+            }
+            x_settings.Encoding = encoding;
+                
+                             
+            using (StreamWriter writer = new StreamWriter(inpfile,false, encoding))
+            {
+                using (var reader = new StreamReader(inpfileORI,encoding))
+                {
+                    while ((line = reader.ReadLine()) != null)
                     {
+
                         //Console.WriteLine(line);
-                        if (insideCDATA == false )
+                        if (insideCDATA == false)
                         {
                             // not in CDDATA
                             string iniseg = "<seg>";
                             string iniCDATA = "<![CDATA[";
                             string auxlin = line.TrimStart();
                             if (auxlin.Length >= iniseg.Length) // at least <seg> lenght
+                            {
+                                if (iniseg == auxlin.Substring(0, iniseg.Length))
                                 {
-                                if (iniseg == auxlin.Substring(0, iniseg.Length)) {
                                     // found segment but before doing it lets make
                                     // sure no CDATA is already there 
                                     bool ContainsCDATA = false;
-                                    if (auxlin.Length > iniseg.Length+"[CDATA[".Length) {
-;                                        ContainsCDATA = auxlin.Contains("[CDATA[");
+                                    if (auxlin.Length > iniseg.Length + "[CDATA[".Length)
+                                    {
+                                        ; ContainsCDATA = auxlin.Contains("[CDATA[");
                                     }
                                     // we cannot add CDATA if already exists
                                     if (ContainsCDATA == false) // we can add
@@ -128,7 +149,7 @@ namespace _03_Tubo_Read_TMX_MEM
                                         insideCDATA = true; // inside CDTA
                                     }
 
-                                    
+
 
                                 }
                             }
@@ -140,15 +161,15 @@ namespace _03_Tubo_Read_TMX_MEM
                             string finCDATA = "]]>";
                             if (auxlin.Length >= finseg.Length) // min lenght
                             {
-                                if (finseg == auxlin.Substring(auxlin.Length-finseg.Length))
+                                if (finseg == auxlin.Substring(auxlin.Length - finseg.Length))
                                 { // encontrado
-                                    line = line.Replace(finseg,  finCDATA + finseg);
+                                    line = line.Replace(finseg, finCDATA + finseg);
                                     insideCDATA = false;
                                 }
 
                             }
                         }
-                           writer.WriteLine(line);
+                        writer.WriteLine(line);
                     }
                 }
             }

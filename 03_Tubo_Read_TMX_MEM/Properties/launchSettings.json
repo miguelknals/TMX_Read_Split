@@ -2,7 +2,7 @@
   "profiles": {
     "03_Tubo_Read_TMX_MEM": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\u\\usr\\pro\\VS2019\\test\\00_data\\_ABD004.TMX 500"
+      "commandLineArgs": "C:\\u\\usr\\pro\\VS2019\\GH\\test\\LEGAL_UTF-8.TMX 100000"
     }
   }
 }

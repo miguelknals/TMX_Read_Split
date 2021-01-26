@@ -41,4 +41,8 @@ Syntax once compiled:
 3_Tubo_READ_TMX_MEM path\file.TMX integer_number_to_split
 ```
 
-(c) miguel canals 2021 All rights reserved
+## Changes
+
+20210126 -> Support for UTF-16 and UTF-8 incomming TMX according XML version declaration in line 1.
+
+(c) miguel canals 2021 MIT License
